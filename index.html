@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Upload</title>
+  </head>
+  <body>
+    <h1>Upload a Video</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+      </div>
+      <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required />
+      </div>
+      <div>
+        <label for="avatar">Avatar URL:</label>
+        <input type="text" id="avatar" name="avatar" required />
+      </div>
+      <div>
+        <label for="video">Video:</label>
+        <input
+          type="file"
+          id="video"
+          name="video"
+          accept="video/mp4"
+          required
+        />
+      </div>
+      <button type="submit">Upload</button>
+    </form>
+
+    <script>
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const formData = new FormData();
+          formData.append(
+            "username",
+            document.getElementById("username").value
+          );
+          formData.append("title", document.getElementById("title").value);
+          formData.append("avatar", document.getElementById("avatar").value);
+          formData.append("video", document.getElementById("video").files[0]);
+
+          try {
+            const response = await fetch(
+              "https://db-tiktok.vercel.app/api/upload",
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+
+            const result = await response.json();
+            if (result.success) {
+              alert("Video uploaded successfully!");
+            } else {
+              alert("Error uploading video");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Error uploading video");
+          }
+        });
+    </script>
+  </body>
+</html>
